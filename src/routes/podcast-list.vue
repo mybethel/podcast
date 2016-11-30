@@ -34,7 +34,7 @@ export default {
     getPodcasts() {
       this.loading = true;
 
-      this.$http.get('http://api.bethel.io/podcast?sort=updatedAt')
+      this.$http.get('//api.bethel.io/podcast?sort=updatedAt')
         .then(response => {
           this.loading = false;
           this.podcasts = response.body;

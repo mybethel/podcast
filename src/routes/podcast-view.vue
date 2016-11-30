@@ -29,7 +29,7 @@ export default {
     getPodcast() {
       if (!this.$route.params.id) return;
 
-      this.$http.get(`http://api.bethel.io/podcast/${this.$route.params.id}`)
+      this.$http.get(`//api.bethel.io/podcast/${this.$route.params.id}`)
         .then(response => {
           this.loading = false;
           this.podcast = response.body;
