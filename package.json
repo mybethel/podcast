@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "scripts": {
     "postinstall": "npm run build",
-    "start": "webpack-dev-server --inline --hot --content-base ./dist",
+    "start": "node ./index.js",
+    "dev": "webpack-dev-server --inline --hot --content-base ./dist",
     "build": "NODE_ENV=production webpack"
   },
   "license": "MIT",
   "dependencies": {
+    "express": "^4.14.0",
+    "jts": "^1.2.4",
+    "needle": "^1.4.2",
     "vue": "^2.0.3",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.0.3"
