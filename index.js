@@ -29,11 +29,11 @@ function getPodcast(id) {
       api(`podcast/${id}`),
       api(`podcast/${id}/media?sort=-date`)
     ]).then(podcast => {
-      payload.podcast = podcast[0];
-      payload.podcastMedia = podcast[1];
+      payload.podcast = podcast[0].data;
+      payload.podcastMedia = podcast[1].data;
       return api(`ministry/${payload.podcast.ministry}`);
     }).then(ministry => {
-      payload.ministry = ministry;
+      payload.ministry = ministry.data;
       resolve(payload);
     }).catch(err => {
       reject(err);
@@ -43,7 +43,7 @@ function getPodcast(id) {
 
 function api(endpoint) {
   return new Promise((resolve, reject) => {
-    http.get(`http://api.bethel.io/${endpoint}`, (err, response) => {
+    http.get(`https://api.bethel.io/${endpoint}`, (err, response) => {
       if (err || response.statusCode !== 200) {
         return reject(err || response);
       }

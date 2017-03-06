@@ -27,7 +27,7 @@
   ${podcastMedia.map(media => !media.url ? '' : `<item>
     <title>${media.name || media.url.split('/').pop()}</title>
     <pubDate>${ new Date(media.date).toUTCString() }</pubDate>
-    <guid isPermaLink="false">${media.url.split('.').pop()}</guid>
+    <guid isPermaLink="false">${media.url.replace(/&/g, '&amp;')}</guid>
     <itunes:author>${ (podcast.owner) ? podcast.owner : ministry.name }</itunes:author>
     <description>
       ${_jts.s(media.description)}
