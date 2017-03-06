@@ -5,23 +5,27 @@
     <p>We're making podcasting fast, easy and affordable for churches of all
       sizes! The churches below are podcasting on the Bethel Platform.</p>
     <a class="button" href="http://getbethel.com/">Get Started</a>
-    <spinner v-if="loading" />
     <ul>
-      <li v-for="podcast in podcasts">
+      <li v-for="podcast in podcasts.all">
         <router-link :to="'/' + podcast._id">
         <img :src="podcast.image | thumbnail" width="160" />
       </li>
     </ul>
+    <mugen-scroll :handler="getPodcasts" :should-handle="!podcasts.loading">
+      <spinner v-if="!podcasts.last" />
+    </mugen-scroll>
   </div>
 </template>
 
 <script>
+import MugenScroll from 'vue-mugen-scroll';
+import Podcast from '../services/podcast';
+
 export default {
   name: 'podcast-list',
   data() {
     return {
-      loading: false,
-      podcasts: []
+      podcasts: Podcast.state
     }
   },
   created() {
@@ -34,13 +38,10 @@ export default {
     getPodcasts() {
       this.loading = true;
 
-      this.$http.get('//api.bethel.io/podcast?sort=updatedAt')
-        .then(response => {
-          this.loading = false;
-          this.podcasts = response.body;
-        });
+      Podcast.getAll();
     }
-  }
+  },
+  components: { MugenScroll }
 }
 </script>
 
