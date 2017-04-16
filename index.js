@@ -2,6 +2,8 @@ const express = require('express');
 const http = require('needle');
 const JTS = require('jts');
 
+const xmlescape = require('xml-escape');
+
 var app = express();
 var engine = new JTS();
 
@@ -23,7 +25,10 @@ app.listen(process.env.PORT || 3000, function() {
 });
 
 function getPodcast(id) {
-  let payload = {};
+  let payload = {
+    _s: xmlescape,
+  };
+
   return new Promise((resolve, reject) => {
     Promise.all([
       api(`podcast/${id}`),
