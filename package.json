@@ -1,6 +1,10 @@
 {
   "name": "podcast",
   "version": "0.1.0",
+  "engines": {
+    "node": "6.x",
+    "npm": "3.x"
+  },
   "scripts": {
     "postinstall": "npm run build",
     "start": "node ./index.js",
@@ -35,8 +39,6 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "vue-loader": "^9.7.0",
-    "vue-mugen-scroll": "^0.2.1",
-    "vue-resource": "^1.0.3",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2"
   },
