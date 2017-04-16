@@ -11,8 +11,22 @@ app.set('views', 'src/views');
 app.engine('jts', engine.render);
 app.use(express.static('dist'));
 
+// Ensure that visitor IP addresses are not the reverse proxy to ensure we get
+// the most accurate data before logging performance data to the API.
+app.enable('trust proxy');
+
 app.get('/:id.xml', (req, res) => {
   getPodcast(req.params.id).then(payload => {
+    http.post('https://api.bethel.io/performance/track', {
+      collection: 'podcast',
+      podcast: payload.podcast._id,
+      ministry: payload.ministry._id,
+      ip_address: req.headers['x-forwarded-for'] || req.ip,
+      user_agent: req.headers['user-agent'],
+    }, (err, response) => {
+      if (err) console.error(err);
+    });
+
     res.header('Content-Type', 'text/xml; charset=UTF-8');
     res.render('feed.jts', payload);
   }).catch(err => {
