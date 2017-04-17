@@ -21,7 +21,7 @@ app.get('/:id.xml', (req, res) => {
       collection: 'podcast',
       podcast: payload.podcast._id,
       ministry: payload.ministry._id,
-      ip_address: req.headers['x-forwarded-for'] || req.ip,
+      ip_address: req.ip,
       user_agent: req.headers['user-agent'],
     }, { json: true }, (err, response) => {
       if (err) console.error(err);
