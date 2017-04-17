@@ -23,7 +23,7 @@ app.get('/:id.xml', (req, res) => {
       ministry: payload.ministry._id,
       ip_address: req.headers['x-forwarded-for'] || req.ip,
       user_agent: req.headers['user-agent'],
-    }, (err, response) => {
+    }, { json: true }, (err, response) => {
       if (err) console.error(err);
     });
 
