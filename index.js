@@ -55,6 +55,7 @@ function getPodcast(id) {
       payload.ministry = ministry.data;
       resolve(payload);
     }).catch(err => {
+      console.error(err);
       reject(err);
     });
   });
@@ -62,8 +63,9 @@ function getPodcast(id) {
 
 function api(endpoint) {
   return new Promise((resolve, reject) => {
-    http.get(`https://api.bethel.io/${endpoint}`, (err, response) => {
+    http.get(`https://api.bethel.io/${endpoint}`, { json: true }, (err, response) => {
       if (err || response.statusCode !== 200) {
+        console.error(err || response);
         return reject(err || response);
       }
       resolve(response.body);
