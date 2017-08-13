@@ -15,7 +15,7 @@
   "dependencies": {
     "express": "^4.14.0",
     "jts": "^1.2.4",
-    "request": "^2.81.0",
+    "node-fetch": "^1.7.2",
     "vue": "^2.0.3",
     "vue-mugen-scroll": "^0.2.5",
     "vue-resource": "^1.0.3",

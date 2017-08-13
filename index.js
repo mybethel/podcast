@@ -1,6 +1,6 @@
 const express = require('express');
 const JTS = require('jts');
-const request = require('request');
+const fetch = require('node-fetch');
 
 const xmlescape = require('xml-escape');
 
@@ -17,18 +17,19 @@ app.enable('trust proxy');
 
 app.get('/:id.xml', (req, res) => {
   getPodcast(req.params.id).then(payload => {
-    request.post({
-      url: 'https://api.bethel.io/performance/track',
-      body: {
+    fetch('https://api.bethel.io/performance/track', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'BethelPodcast/0.1 (+https://podcast.bethel.io)',
+      },
+      body: JSON.stringify({
         collection: 'podcast',
         podcast: payload.podcast._id,
         ministry: payload.ministry._id,
         ip_address: req.ip,
         user_agent: req.headers['user-agent'],
-      },
-      json: true,
-    }, err => {
-      if (err) console.error(err);
+      }),
     });
 
     res.header('Content-Type', 'text/xml; charset=UTF-8');
@@ -65,20 +66,9 @@ function getPodcast(id) {
 }
 
 function api(endpoint) {
-  return new Promise((resolve, reject) => {
-    request.get(`https://api.bethel.io/${endpoint}`, (err, response, body) => {
-      if (err || response.statusCode !== 200) {
-        console.error(`API request to /${endpoint} failed:`, err || response.statusCode);
-        return reject(err || response.statusCode);
-      }
-
-      try {
-        body = JSON.parse(body);
-        resolve(body);
-      } catch(err) {
-        console.error(`Failed to parse response from /${endpoint}: `, err.message || err);
-        reject(err.message || err);
-      }
-    })
-  });
+  return fetch(`https://api.bethel.io/${endpoint}`, {
+    headers: {
+      'User-Agent': 'BethelPodcast/0.1 (+https://podcast.bethel.io)',
+    },
+  }).then(res => res.json());
 }
