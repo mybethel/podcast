@@ -5,7 +5,7 @@ import { API_ROOT } from '../config'
 Vue.use(VueResource);
 
 const Podcast = Vue.resource('podcast{/id}{?page}&sort=-updatedAt', {}, {
-  media: { method: 'GET', url: 'podcast{/id}/media{?page}&sort=-date' }
+  media: { method: 'GET', url: 'podcast{/id}/media{?page}&sort=-updatedAt' }
 }, { root: API_ROOT });
 
 export default {
