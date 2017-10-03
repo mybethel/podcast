@@ -1,72 +1,73 @@
 const path = require('path');
 const webpack = require('webpack');
 
-// Plugins being used in the webpack build process.
-const CleanPlugin = require('clean-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const { WebPlugin } = require('web-webpack-plugin');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-var config = {
-  devtool: process.env.NODE_ENV === 'production' ? '#source-map' : '#eval-source-map',
-  entry: ['./src/main.js', './src/styles/index.css'],
+let config = {
+  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
+  entry: { app: ['normalize.css/normalize.css', './src/main.js', './src/styles/index.css'] },
   output: {
+    chunkFilename: '[name].js',
+    filename: '[name].js',
     path: path.resolve(__dirname, './dist'),
     publicPath: '/',
-    filename: 'js/app.js'
   },
   module: {
-    loaders: [
-      { test: /\.js$/, loader: 'babel', exclude: /node_modules/ },
-      { test: /\.vue$/, loader: 'vue' },
-      { test: /\.css$/, loaders: ['style-loader', 'css-loader?importLoaders=1', 'postcss-loader'] },
-      { test: /\.(png|jpe?g|gif|svg)(\?.*)?$/, loader: 'url',
+    rules: [
+      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          postcss: [require('postcss-cssnext')()],
+          loaders: {
+            js: 'babel-loader',
+            css: ['style-loader', 'css-loader', 'postcss-loader'],
+          },
+        },
+      },
+      { test: /\.css$/, loader: ['style-loader', 'css-loader', 'postcss-loader'] },
+      { test: /\.svg$/, loader: 'svg-sprite-loader' },
+      { test: /\.(png|jpe?g|gif)(\?.*)?$/, loader: 'url-loader',
         query: {
           limit: 10000,
-          name: 'img/[name].[ext]'
-        }
-      }
-    ]
+          name: 'img/[name].[ext]',
+        },
+      },
+    ],
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new ExtractTextPlugin('css/app.css')
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: `"${process.env.NODE_ENV}"`,
+      },
+    }),
+    new WebPlugin({
+      filename: 'index.html',
+      template: './src/index.html',
+      requires: ['app'],
+    }),
   ],
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue',
-      'src': path.resolve(__dirname, './src'),
-      'assets': path.resolve(__dirname, './src/assets'),
-      'components': path.resolve(__dirname, './src/components')
+      'vue$': 'vue/dist/vue.common',
+      'styles': path.resolve(__dirname, './src/styles'),
     },
-    extensions: ['', '.js', '.vue']
+    extensions: ['.js', '.vue'],
   },
-  vue: {
-    loaders: {
-      js: 'babel',
-      css: ExtractTextPlugin.extract(['css'])
-    },
-    postcss: [
-      require('autoprefixer')({
-        browsers: ['last 2 versions']
-      })
-    ]
-  }
 };
 
 if (process.env.NODE_ENV === 'production') {
   config.plugins = config.plugins.concat([
-    new CleanPlugin(['dist'], { exclude: ['index.html'] }),
-    new OptimizeCssAssetsPlugin({
-      assetNameRegExp: /\.css$/,
-      cssProcessorOptions: { discardComments: { removeAll: true } }
-    }),
     new webpack.optimize.UglifyJsPlugin({
+      output: {
+        comments: false,
+      },
       compress: {
-        warnings: false
-      }
-    })
+        warnings: false,
+      },
+    }),
   ]);
 }
 

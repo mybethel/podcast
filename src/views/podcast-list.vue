@@ -1,6 +1,6 @@
 <template>
   <div class="podcast-list">
-    <a href="http://getbethel.com/"><img src="../assets/logo.svg" width="100" /></a>
+    <a href="http://getbethel.com/"><svg><use xlink:href="#logo"></use></svg></a>
     <h1>Podcasting: powered by Bethel</h1>
     <p>We're making podcasting fast, easy and affordable for churches of all
       sizes! The churches below are podcasting on the Bethel Platform.</p>
@@ -8,7 +8,8 @@
     <ul>
       <li v-for="podcast in podcasts.all">
         <router-link :to="'/' + podcast._id">
-        <img :src="podcast.image | thumbnail" width="160" />
+          <img :src="podcast.image | thumbnail" width="160" />
+        </router-link>
       </li>
     </ul>
     <mugen-scroll :handler="getPodcasts" :should-handle="!podcasts.loading">
@@ -18,6 +19,8 @@
 </template>
 
 <script>
+import twitterIcon from '../assets/logo.svg';
+
 import MugenScroll from 'vue-mugen-scroll';
 import Podcast from '../services/podcast';
 
@@ -71,6 +74,10 @@ li {
   display: inline-block;
   font-size: 0;
   margin: 0.25rem;
+}
+
+svg {
+  max-width: 100px;
 }
 
 p {
