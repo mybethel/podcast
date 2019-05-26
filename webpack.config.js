@@ -1,74 +1,62 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require('path')
+const webpack = require('webpack')
 
-const { WebPlugin } = require('web-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+const mode = process.env.NODE_ENV || 'development'
 
-let config = {
-  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
-  entry: { app: ['normalize.css/normalize.css', './src/main.js', './src/styles/index.css'] },
-  output: {
-    chunkFilename: '[name].js',
-    filename: '[name].js',
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/',
+module.exports = {
+  devServer: {
+    historyApiFallback: true,
+    port: 8080
   },
+  devtool: mode === 'production' ? 'source-map' : 'inline-source-map',
+  entry: { app: ['normalize.css/normalize.css', './src/main.js', './src/styles/index.css'] },
+  mode,
   module: {
     rules: [
-      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
-      { test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          postcss: [require('postcss-cssnext')()],
-          loaders: {
-            js: 'babel-loader',
-            css: ['style-loader', 'css-loader', 'postcss-loader'],
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 }
           },
-        },
+          'postcss-loader'
+        ]
       },
-      { test: /\.css$/, loader: ['style-loader', 'css-loader', 'postcss-loader'] },
-      { test: /\.svg$/, loader: 'svg-sprite-loader' },
-      { test: /\.(png|jpe?g|gif)(\?.*)?$/, loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: 'img/[name].[ext]',
-        },
+      {
+        test: /\.js$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
       },
-    ],
+      { test: /\.svg$/, use: 'svg-sprite-loader' },
+      { test: /\.vue$/, use: 'vue-loader' }
+    ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: `"${process.env.NODE_ENV}"`,
-      },
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'development'
     }),
-    new WebPlugin({
-      filename: 'index.html',
-      template: './src/index.html',
-      requires: ['app'],
+    new VueLoaderPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/index.html')
     }),
+    new OptimizeCssAssetsPlugin({
+      assetNameRegExp: /\.css$/g,
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }]
+      }
+    })
   ],
   resolve: {
-    alias: {
-      'vue$': 'vue/dist/vue.common',
-      'styles': path.resolve(__dirname, './src/styles'),
-    },
-    extensions: ['.js', '.vue'],
-  },
-};
-
-if (process.env.NODE_ENV === 'production') {
-  config.plugins = config.plugins.concat([
-    new webpack.optimize.UglifyJsPlugin({
-      output: {
-        comments: false,
-      },
-      compress: {
-        warnings: false,
-      },
-    }),
-  ]);
+    extensions: ['.js', '.vue']
+  }
 }
-
-module.exports = config;
