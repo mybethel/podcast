@@ -1,6 +1,7 @@
 {
-  "name": "podcast",
+  "name": "@bethel/podcast",
   "version": "0.1.0",
+  "repository": "mybethel/podcast",
   "engines": {
     "node": "10.x",
     "npm": "6.x"
