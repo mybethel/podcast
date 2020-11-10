@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
  * @return {Object}
  */
 async function getPodcast (id) {
-  const [ podcast, media ] = await Promise.all([
+  const [podcast, media] = await Promise.all([
     client.get(`podcast/${id}`),
     client.get(`podcast/${id}/media?sort=-date&limit=999`)
   ])

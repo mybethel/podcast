@@ -1,40 +1,40 @@
-import Vue from 'vue';
-import VueResource from 'vue-resource';
+import Vue from 'vue'
+import VueResource from 'vue-resource'
 import { API_ROOT } from '../config'
 
-Vue.use(VueResource);
+Vue.use(VueResource)
 
 const Podcast = Vue.resource('podcast{/id}{?page}&sort=-updatedAt', {}, {
   media: { method: 'GET', url: 'podcast{/id}/media{?page}&sort=-updatedAt' }
-}, { root: API_ROOT });
+}, { root: API_ROOT })
 
 export default {
 
   state: {
     last: false,
     loading: true,
-    all: [],
+    all: []
   },
 
   _id: null,
   _next: 1,
 
-  getAll() {
-    if (this.state.last) return;
-    this.state.loading = true;
+  getAll () {
+    if (this.state.last) return
+    this.state.loading = true
 
     return Podcast.get({ page: this._next })
       .then(response => {
-        console.log(response);
+        console.log(response)
         if (response.body.paging.next) {
-          this._next = this._next + 1;
+          this._next = this._next + 1
         } else {
-          this.state.last = true;
+          this.state.last = true
         }
 
-        this.state.all = this.state.all.concat(response.body.data);
-        this.state.loading = false;
-      });
+        this.state.all = this.state.all.concat(response.body.data)
+        this.state.loading = false
+      })
   }
 
-};
+}

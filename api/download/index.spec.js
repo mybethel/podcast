@@ -33,7 +33,7 @@ describe('/download/:id', () => {
   it('redirects to the underlying media url', async () => {
     fetch.mockResolvedValue({ json: () => ({ data: { asset: { url: 'https://player.vimeo.com/external/477368864.sd.mp4' } } }) })
 
-    const { status, headers, ...rest } = await request(handler).get('/download/55d9ffb57c52600b006e5bdc')
+    const { status, headers } = await request(handler).get('/download/55d9ffb57c52600b006e5bdc')
     expect(status).toBe(302)
     expect(headers.location).toContain('player.vimeo.com')
   })

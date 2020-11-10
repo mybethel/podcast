@@ -11,7 +11,7 @@ export default {
       type: String,
       default: '#1591B5'
     },
-  	stroke: {
+    stroke: {
       type: Number,
       default: 4
     },

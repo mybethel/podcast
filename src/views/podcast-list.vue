@@ -6,7 +6,10 @@
       sizes! The churches below are podcasting on the Bethel Platform.</p>
     <a class="button" href="http://getbethel.com/">Get Started</a>
     <ul>
-      <li v-for="podcast in podcasts.all">
+      <li
+        v-for="podcast in podcasts.all"
+        :key="podcast._id"
+      >
         <router-link :to="'/' + podcast._id">
           <img :src="podcast.image | thumbnail" width="160" />
         </router-link>
@@ -19,29 +22,27 @@
 </template>
 
 <script>
-import twitterIcon from '../assets/logo.svg';
-
-import MugenScroll from 'vue-mugen-scroll';
-import Podcast from '../services/podcast';
+import MugenScroll from 'vue-mugen-scroll'
+import Podcast from '../services/podcast'
 
 export default {
   name: 'podcast-list',
-  data() {
+  data () {
     return {
       podcasts: Podcast.state
     }
   },
-  created() {
-    this.getPodcasts();
+  created () {
+    this.getPodcasts()
   },
   watch: {
-    '$route': 'getPodcasts'
+    $route: 'getPodcasts'
   },
   methods: {
-    getPodcasts() {
-      this.loading = true;
+    getPodcasts () {
+      this.loading = true
 
-      Podcast.getAll();
+      Podcast.getAll()
     }
   },
   components: { MugenScroll }

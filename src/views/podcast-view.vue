@@ -13,27 +13,27 @@
 <script>
 export default {
   name: 'podcast-view',
-  data() {
+  data () {
     return {
       loading: true,
       podcast: {}
     }
   },
-  created() {
-    this.getPodcast();
+  created () {
+    this.getPodcast()
   },
   watch: {
-    '$route': 'getPodcast'
+    $route: 'getPodcast'
   },
   methods: {
-    getPodcast() {
-      if (!this.$route.params.id) return;
+    getPodcast () {
+      if (!this.$route.params.id) return
 
       this.$http.get(`//api.bethel.io/podcast/${this.$route.params.id}`)
         .then(response => {
-          this.loading = false;
-          this.podcast = response.body;
-        });
+          this.loading = false
+          this.podcast = response.body
+        })
     }
   }
 }
