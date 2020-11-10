@@ -10,12 +10,14 @@
     "start": "micro-dev",
     "dev": "webpack-dev-server --inline --hot --content-base ./dist",
     "build": "webpack",
-    "now-build": "NODE_ENV=production npm run build"
+    "now-build": "NODE_ENV=production npm run build",
+    "test": "vue-cli-service test:unit"
   },
   "license": "MIT",
   "dependencies": {
+    "@nautilus/micro": "^0.1.0",
+    "cross-fetch": "^3.0.6",
     "micro": "^9.3.4",
-    "node-fetch": "^2.6.1",
     "vue": "^2.6.10",
     "vue-mugen-scroll": "^0.2.5",
     "vue-resource": "^1.5.1",
@@ -25,6 +27,8 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "@vue/cli-plugin-unit-jest": "^4.5.8",
+    "@vue/cli-service": "^4.5.8",
     "autoprefixer": "^9.5.1",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^2.0.2",
@@ -35,6 +39,7 @@
     "postcss-custom-media": "^7.0.8",
     "postcss-loader": "^3.0.0",
     "style-loader": "^0.23.1",
+    "supertest": "^6.0.1",
     "svg-sprite-loader": "^4.1.6",
     "vue-loader": "^15.7.0",
     "vue-style-loader": "^4.1.2",
