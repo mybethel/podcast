@@ -1,6 +1,6 @@
 const fetch = require('node-fetch')
 
-const { name, version } = require('./package.json')
+const { name, version } = require('../package.json')
 
 const userAgent = `${name}/${version} (+https://getbethel.com)`
 
