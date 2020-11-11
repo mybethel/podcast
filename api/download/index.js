@@ -21,7 +21,7 @@ module.exports = nautilus(async (req, res) => {
       `,
       variables: { id }
     })
-  }).then(({ json }) => json())
+  }).then(res => res.json())
 
   if (!data || !data.asset) return res.notFound()
 
