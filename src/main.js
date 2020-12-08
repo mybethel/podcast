@@ -2,10 +2,15 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 
-import Spinner from './components/spinner.vue'
-
 import PodcastList from './views/podcast-list.vue'
 import PodcastView from './views/podcast-view.vue'
+import vuetify from './plugins/vuetify'
+
+import {
+  VApp,
+  VContainer,
+  VMain
+} from 'vuetify/lib'
 
 Vue.filter('thumbnail', function (image) {
   const sizeRegex = /(?:\?|&)w=(\d+)/
@@ -15,8 +20,6 @@ Vue.filter('thumbnail', function (image) {
   image = image.replace(sizeRegex, '')
   return `${image}?fit=crop&w=${width}&h=${width}`
 })
-
-Vue.component('spinner', Spinner)
 
 Vue.use(VueResource)
 Vue.use(VueRouter)
@@ -28,7 +31,12 @@ const router = new VueRouter({
   ]
 })
 
-export default new Vue({
+new Vue({
   router,
-  render: (el) => el('router-view')
+  vuetify,
+  render: h => h(VApp, [
+    h(VMain, [
+      h(VContainer, [h('router-view')])
+    ])
+  ])
 }).$mount('#app')
