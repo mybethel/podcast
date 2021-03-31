@@ -1,20 +1,19 @@
-const { send } = require('micro')
 const { parse } = require('path')
 
-const client = require('./client')
-const feed = require('./feed')
+const client = require('../client')
+const feed = require('./template')
 
 /**
  * Microservice for rendering an iTunes-compatible XML podcast feed.
  */
 module.exports = async (req, res) => {
   const path = parse(req.url)
-  if (path.ext !== '.xml' || !path.name) return send(res, 404)
+  if (path.ext !== '.xml' || !path.name) return res.status(404).send()
 
-  const payload = await getPodcast(path.name)
+  const data = await getPodcast(path.name)
 
   res.setHeader('Content-Type', 'text/xml; charset=UTF-8')
-  send(res, 200, feed(payload))
+  res.status(200).send(await feed(data))
 }
 
 /**
