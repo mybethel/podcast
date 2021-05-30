@@ -2,6 +2,7 @@
 .vercel
 node_modules
 npm-debug.log
+config/env/local.js
 coverage
 dist/*
 !dist/favicon*
