@@ -27,19 +27,21 @@ module.exports = ({ ministry, podcast, media }) => (`
     </itunes:category>
     <itunes:new-feed-url>https://podcast.bethel.io/${podcast._id}.xml</itunes:new-feed-url>
     <atom:link href="https://podcast.bethel.io/${podcast._id}.xml" rel="self" type="application/rss+xml"/>
-    ${media.map(media => !media.url ? '' : `<item>
-      <title>${escape(media.name || media.url.split('/').pop())}</title>
-      <pubDate>${new Date(media.date).toUTCString()}</pubDate>
-      <guid isPermaLink="false">${media.url.replace(/&/g, '&amp;')}</guid>
-      <itunes:author>${podcast.owner || ministry.name}</itunes:author>
-      <description>
-        ${escape(media.description || '')}
-      </description>
-      <itunes:duration>${media.duration}</itunes:duration>
-      <enclosure url="${escape(media.url)}" length="${media.size}" type="${media.mime}"/>
-      <itunes:explicit>no</itunes:explicit>
-      <itunes:block>no</itunes:block>
-    </item>`).join('')}
+    ${media.map(media => !media.url
+      ? ''
+      : `<item>
+        <title>${escape(media.name || media.url.split('/').pop())}</title>
+        <pubDate>${new Date(media.date).toUTCString()}</pubDate>
+        <guid isPermaLink="false">${media.url.replace(/&/g, '&amp;')}</guid>
+        <itunes:author>${podcast.owner || ministry.name}</itunes:author>
+        <description>
+          ${escape(media.description || '')}
+        </description>
+        <itunes:duration>${media.duration}</itunes:duration>
+        <enclosure url="${escape(media.url)}" length="${media.size}" type="${media.mime}"/>
+        <itunes:explicit>no</itunes:explicit>
+        <itunes:block>no</itunes:block>
+      </item>`).join('')}
   </channel>
   </rss>
 `)

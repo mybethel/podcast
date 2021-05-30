@@ -1,50 +1,76 @@
 <template>
   <div class="podcast-list">
-    <a href="http://getbethel.com/"><svg><use xlink:href="#logo"></use></svg></a>
+    <a href="http://getbethel.com/">
+      <v-img
+        :src="require('../assets/logo.svg')"
+        class="my-6"
+        width="100"
+      />
+    </a>
     <h1>Podcasting: powered by Bethel</h1>
-    <p>We're making podcasting fast, easy and affordable for churches of all
-      sizes! The churches below are podcasting on the Bethel Platform.</p>
-    <a class="button" href="http://getbethel.com/">Get Started</a>
+    <p>
+      We're making podcasting fast, easy and affordable for churches of all
+      sizes! The churches below are podcasting on the Bethel Platform.
+    </p>
+    <v-btn
+      class="mb-6"
+      dark
+      depressed
+      href="http://getbethel.com/"
+    >
+      Get Started
+    </v-btn>
     <ul>
-      <li v-for="podcast in podcasts.all">
+      <li
+        v-for="podcast in podcasts.all"
+        :key="podcast._id"
+      >
         <router-link :to="'/' + podcast._id">
-          <img :src="podcast.image | thumbnail" width="160" />
+          <img
+            :src="podcast.image | thumbnail"
+            width="160"
+          >
         </router-link>
       </li>
     </ul>
-    <mugen-scroll :handler="getPodcasts" :should-handle="!podcasts.loading">
-      <spinner v-if="!podcasts.last" />
+    <mugen-scroll
+      :handler="getPodcasts"
+      :should-handle="!podcasts.loading"
+    >
+      <v-progress-circular
+        v-if="!podcasts.last"
+        color="primary"
+        indeterminate
+      />
     </mugen-scroll>
   </div>
 </template>
 
 <script>
-import twitterIcon from '../assets/logo.svg';
-
-import MugenScroll from 'vue-mugen-scroll';
-import Podcast from '../services/podcast';
+import MugenScroll from 'vue-mugen-scroll'
+import Podcast from '../services/podcast'
 
 export default {
-  name: 'podcast-list',
-  data() {
+  name: 'PodcastList',
+  components: { MugenScroll },
+  data () {
     return {
       podcasts: Podcast.state
     }
   },
-  created() {
-    this.getPodcasts();
-  },
   watch: {
-    '$route': 'getPodcasts'
+    $route: 'getPodcasts'
+  },
+  created () {
+    this.getPodcasts()
   },
   methods: {
-    getPodcasts() {
-      this.loading = true;
+    getPodcasts () {
+      this.loading = true
 
-      Podcast.getAll();
+      Podcast.getAll()
     }
-  },
-  components: { MugenScroll }
+  }
 }
 </script>
 
@@ -52,6 +78,11 @@ export default {
 .podcast-list {
   padding: 60px 0;
   text-align: center;
+}
+
+.v-image {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 h1, h2 {
