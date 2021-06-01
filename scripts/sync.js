@@ -17,6 +17,8 @@ const API_PAGINATION = 100
     { $unwind: { path: '$service', preserveNullAndEmptyArrays: true } }
   ])
 
+  const media = client.db().collection('podcastmedia')
+
   for await (const podcast of cursor) {
     const log = msg => console.log([podcast._id, podcast.name, msg].join(' - '))
 
@@ -29,16 +31,34 @@ const API_PAGINATION = 100
       const results = await getVideos(podcast)
       log(`${results.length} matching videos`)
 
-      console.log(resolver(results[0]))
+      await Promise.all(results.map(result => {
+        const { date, ...video } = resolver(result)
+        video.podcast = podcast._id
+
+        return media.updateOne(
+          { uuid: video.uuid, podcast: video.podcast },
+          {
+            $set: video,
+            $setOnInsert: {
+              createdAt: new Date(),
+              date,
+              deleted: false
+            }
+          },
+          { upsert: true }
+        )
+      }))
+
+      await client.db().collection('podcast')
+        .updateOne({ _id: podcast._id }, { $set: { lastSync: new Date() } })
+
+      log('Sync complete')
     } catch (err) {
       log('Unexpected error encountered during sync:')
       console.error(err)
     }
-
-    throw new Error('@TODO')
   }
 
-  console.log('done')
   process.exit(0)
 })()
 
@@ -78,7 +98,7 @@ const getVideos = async (podcast) => {
     data.push(...remaining.map(({ data }) => data).flat())
   }
 
-  return data.filter(video => {
+  return (data || []).filter(video => {
     // If a video is not marked as public it is ignored. In the future this
     // could be modified to allow private channels to be used as a source.
     if (video.privacy?.view !== 'anybody') {
