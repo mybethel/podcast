@@ -21,7 +21,7 @@
     "vue-mugen-scroll": "^0.2.6",
     "vue-resource": "^1.5.2",
     "vue-router": "^3.4.9",
-    "vuetify": "^2.3.19",
+    "vuetify": "^2.6.2",
     "xml-escape": "^1.1.0"
   },
   "devDependencies": {
